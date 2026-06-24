@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__visualize__read_me",
+      "mcp__Claude_Preview__preview_start",
+      "WebFetch(domain:www.cameronsworld.net)",
+      "Bash(mkdir -p /Users/garett.woolley/LuckyDan/images/photos /Users/garett.woolley/LuckyDan/images/gifs && mv /Users/garett.woolley/LuckyDan/Bison.jpg /Users/garett.woolley/LuckyDan/images/photos/ && mv /Users/garett.woolley/LuckyDan/Horse.png /Users/garett.woolley/LuckyDan/images/photos/ && mv /Users/garett.woolley/LuckyDan/horses2.jpg /Users/garett.woolley/LuckyDan/images/photos/ && mv /Users/garett.woolley/LuckyDan/Cowboy*.gif /Users/garett.woolley/LuckyDan/images/gifs/)"
+    ]
+  }
+}

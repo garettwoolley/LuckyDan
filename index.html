@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Lucky Dan</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #000;
+  color: #e8dcc8;
+  font-family: 'IM Fell English', serif;
+  font-size: 14px;
+  overflow-x: hidden;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Crect x='15' y='2' width='2' height='11' fill='white'/%3E%3Crect x='15' y='19' width='2' height='11' fill='white'/%3E%3Crect x='2' y='15' width='11' height='2' fill='white'/%3E%3Crect x='19' y='15' width='11' height='2' fill='white'/%3E%3C/svg%3E") 16 16, crosshair;
+}
+
+a { color: #d4845a; text-decoration: none; }
+a:hover { color: #cc44ff; text-decoration: underline; }
+
+/* ---- STARS ---- */
+#stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+.star {
+  position: absolute;
+  color: #fff;
+  font-size: var(--sz, 10px);
+  opacity: 0;
+  animation: twinkle var(--dur, 3s) var(--delay, 0s) infinite;
+}
+@keyframes twinkle {
+  0%,100%{opacity:0} 40%,60%{opacity:var(--op,0.8)}
+}
+
+/* ---- WRAP ---- */
+#wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 10px 16px 40px;
+}
+
+/* ---- TITLE ---- */
+#header {
+  text-align: center;
+  padding: 24px 0 8px;
+  position: relative;
+}
+
+#header h1 {
+  font-family: 'IM Fell English', serif;
+  font-size: clamp(54px, 11vw, 110px);
+  font-weight: normal;
+  color: #f2ece0;
+  line-height: 1;
+  text-shadow: 3px 3px 0 #9b7eb8, 6px 6px 0 #d4845a;
+}
+
+.sub {
+  font-family: 'Comic Sans MS', cursive;
+  font-size: 12px;
+  color: #9b7eb8;
+  letter-spacing: 4px;
+  margin-top: 6px;
+}
+
+.title-gifs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.blink { animation: blink 1s steps(1) infinite; }
+@keyframes blink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
+
+/* ---- RAINBOW ---- */
+.rainbow {
+  height: 4px;
+  border: none;
+  background: linear-gradient(90deg,#ff4444,#ff9900,#f8f040,#44dd66,#44aaff,#cc44ff,#ff4444);
+  margin: 10px 0;
+}
+
+/* ---- MARQUEE ---- */
+.mq {
+  border-top: 1px solid #2a2a2a;
+  border-bottom: 1px solid #2a2a2a;
+  padding: 4px 0;
+  margin: 8px 0;
+}
+.mq marquee {
+  font-family: 'Comic Sans MS', cursive;
+  font-size: 11px;
+  color: #9b7eb8;
+  letter-spacing: 2px;
+}
+
+/* ---- SECTION: SCATTER ---- */
+.scatter {
+  position: relative;
+  padding: 0;
+}
+
+/* float helpers */
+.fl { float: left; margin: 0 14px 10px 0; }
+.fr { float: right; margin: 0 0 10px 14px; }
+.cl { clear: both; }
+
+/* ---- BOXES ---- */
+.box-orange {
+  border: 1px solid #d4845a;
+  padding: 12px 14px;
+  margin: 10px 0;
+  background: rgba(212,132,90,0.06);
+}
+.box-purple {
+  border: 1px solid #9b7eb8;
+  padding: 12px 14px;
+  margin: 10px 0;
+  background: rgba(155,126,184,0.06);
+}
+.box-dashed {
+  border: 1px dashed #d4845a;
+  padding: 10px 14px;
+  margin: 10px 0;
+}
+
+.box-title {
+  font-family: 'Comic Sans MS', cursive;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #9b7eb8;
+  margin-bottom: 8px;
+}
+
+p {
+  line-height: 1.9;
+  color: #c8b89a;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* ---- CAROUSEL ---- */
+#carousel-wrap {
+  border: 2px solid #9b7eb8;
+  box-shadow: 4px 4px 0 #d4845a;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  display: block;
+  width: 100%;
+  max-width: 480px;
+}
+#carousel-wrap img {
+  width: 100%;
+  display: none;
+}
+#carousel-wrap img.active { display: block; }
+
+/* ---- RAINBOW BORDER ANIM ---- */
+@keyframes rainbow-border {
+  0%   { border-color: #9b7eb8; }
+  25%  { border-color: #d4845a; }
+  50%  { border-color: #f2ece0; }
+  75%  { border-color: #cc44ff; }
+  100% { border-color: #9b7eb8; }
+}
+.rainbow-border { animation: rainbow-border 2s steps(6) infinite; }
+
+/* ---- LINKS ---- */
+.links a {
+  display: inline-block;
+  font-family: 'Comic Sans MS', cursive;
+  font-size: 12px;
+  color: #d4845a;
+  border-bottom: 1px dotted #444;
+  margin: 3px 0;
+  display: block;
+  line-height: 2;
+}
+.links a:hover { color: #cc44ff; text-decoration: none; }
+
+/* ---- CENTER UTIL ---- */
+.center { text-align: center; }
+
+img.gif { image-rendering: pixelated; display: block; }
+
+/* ---- PIXEL SHOOT ---- */
+@keyframes px-out {
+  0%   { transform: translate(-50%,-50%) translate(0,0); opacity:1; }
+  100% { transform: translate(-50%,-50%) translate(calc(var(--dx)*30px),calc(var(--dy)*30px)); opacity:0; }
+}
+@keyframes px-flash {
+  0%   { opacity:1; transform:translate(-50%,-50%) scale(1); }
+  49%  { opacity:1; transform:translate(-50%,-50%) scale(1.8); }
+  50%,100% { opacity:0; }
+}
+.px-spark {
+  position:fixed; width:6px; height:6px;
+  pointer-events:none; z-index:9999;
+  image-rendering:pixelated;
+  animation: px-out 0.4s steps(6) forwards;
+}
+.px-flash {
+  position:fixed; width:14px; height:14px;
+  background:#f8f040; pointer-events:none; z-index:9999;
+  image-rendering:pixelated;
+  animation: px-flash 0.18s steps(3) forwards;
+}
+
+/* ---- FOOTER ---- */
+#footer {
+  text-align: center;
+  border-top: 1px dashed #2a2a2a;
+  margin-top: 30px;
+  padding-top: 14px;
+  font-family: 'Comic Sans MS', cursive;
+  font-size: 10px;
+  color: #444;
+  letter-spacing: 2px;
+}
+
+/* ---- DIVIDER GIF ROW ---- */
+.gif-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 14px 0;
+}
+
+/* ---- SECTION RULE ---- */
+.section-rule {
+  border: none;
+  border-top: 1px solid #1e1e1e;
+  margin: 18px 0;
+}
+
+@media (max-width: 500px) {
+  #carousel-wrap { max-width: 100%; }
+  .fr, .fl { float: none; margin: 0 auto 12px; }
+}
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+
+<div id="wrap">
+
+  <!-- HEADER -->
+  <div id="header">
+    <div class="title-gifs">
+      <img src="images/gifs/Cowboy1.gif" alt="" class="gif" />
+      <img src="images/gifs/Cowboy2.gif" alt="" class="gif" />
+      <img src="images/gifs/Cowboy3.gif" alt="" class="gif" />
+      <img src="images/gifs/Cowboy4.gif" alt="" class="gif" />
+    </div>
+    <h1>Lucky Dan <span class="blink">✦</span></h1>
+    <p class="sub">i <3 music &nbsp;◆&nbsp; utah</p>
+  </div>
+
+
+  <div class="mq">
+    <marquee scrollamount="2">✦ &nbsp; cowboys &nbsp; ✦ &nbsp; indians &nbsp; ✦ &nbsp; places i can't call home &nbsp; ✦ &nbsp; outlaw folk &nbsp; ✦ &nbsp; utah &nbsp; ✦ &nbsp; lucky dan &nbsp; ✦ &nbsp;</marquee>
+  </div>
+
+  <!-- ========= SCATTER SECTION ========= -->
+  <div class="scatter">
+
+    <!-- Carousel floated left -->
+    <div class="fl">
+      <div id="carousel-wrap" class="rainbow-border">
+        <img src="images/photos/Bison.jpg" alt="" class="active" />
+        <img src="images/photos/Horse.png" alt="" />
+        <img src="images/photos/horses2.jpg" alt="" />
+        <img src="images/photos/Deer.jpg" alt="" />
+        <img src="images/photos/Deer4.jpg" alt="" />
+        <img src="images/photos/Dog.jpg" alt="" />
+        <img src="images/photos/Horse3.jpg" alt="" />
+      </div>
+      <p class="center" style="font-family:'Comic Sans MS',cursive; font-size:10px; color:#555; margin-top:4px; letter-spacing:1px;">[ click to cycle ]</p>
+    </div>
+
+    <!-- Bio floated right of photo -->
+    <div class="box-purple" style="margin-top: 6px;">
+      <div class="box-title">◆ About ◆</div>
+      <p>Hi. I'm Garett. Lucky Dan is my music project.</p>
+      <p>I'm inspired by cowboys, indians, and the places I don't know if I can call home.</p>
+      <p>Utah.</p>
+    </div>
+
+    <!-- Cowboy gif floated right -->
+    <div class="fr" style="margin-top: 10px;">
+      <img src="images/gifs/Cowboy5.gif" alt="" class="gif" />
+    </div>
+
+    <div class="box-dashed">
+      <div class="box-title">★ Links ★</div>
+      <div class="links">
+        <a href="https://www.instagram.com/luckydanmusic/">☞ &nbsp; instagram</a>
+        <a href="comingsoon.html">☞ &nbsp; spotify</a>
+        <a href="comingsoon.html">☞ &nbsp; bandcamp</a>
+        <a href="comingsoon.html">☞ &nbsp; booking</a>
+      </div>
+    </div>
+
+    <div class="cl"></div>
+  </div>
+
+
+
+  <div class="mq">
+    <marquee scrollamount="3" direction="right">✦ &nbsp; born lucky &nbsp; ✦ &nbsp; die free &nbsp; ✦ &nbsp; ride west &nbsp; ✦ &nbsp; no gods &nbsp; ✦ &nbsp; no kings &nbsp; ✦ &nbsp;</marquee>
+  </div>
+
+    <div class="center" style="margin: 40px 0 10px;">
+    <img src="images/777.gif" alt="777" class="gif" style="display:inline-block;" />
+  </div>
+</div>
+</div>
+  <!-- FOOTER -->
+  <div id="footer">
+    &copy; 2026 Lucky Dan &nbsp;✦&nbsp; made with <span class="blink" style="color:#ff4444;">♥</span>
+  </div>
+
+</div><!-- /wrap -->
+
+<script>
+// Stars
+(function(){
+  var s = document.getElementById('stars');
+  var chars = ['★','✦','✧','·','*','°'];
+  for(var i=0;i<80;i++){
+    var el=document.createElement('span');
+    el.className='star';
+    el.textContent=chars[Math.floor(i*7%chars.length)];
+    el.style.setProperty('--sz',(8+i%8)+'px');
+    el.style.setProperty('--dur',(2+i%5)+'s');
+    el.style.setProperty('--delay',(i*0.13%6)+'s');
+    el.style.setProperty('--op',(0.3+i%7*0.1).toFixed(1));
+    el.style.left=(i*13.7%100)+'%';
+    el.style.top=(i*7.3%100)+'%';
+    var hues=['#fff','#f2ece0','#d4845a','#9b7eb8','#cc44ff','#44aaff'];
+    el.style.color=hues[i%hues.length];
+    s.appendChild(el);
+  }
+})();
+
+// Carousel
+var cur = 0;
+var imgs = document.querySelectorAll('#carousel-wrap img');
+var total = imgs.length;
+document.getElementById('carousel-wrap').onclick = function(){
+  imgs[cur].className = '';
+  cur = (cur + 1) % total;
+  imgs[cur].className = 'active';
+};
+
+// Duck Hunt pixel shoot
+document.addEventListener('click', function(e){
+  var dirs=[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+  var colors=['#f8f040','#f83800','#ffffff','#f8b800','#f8f040','#f83800','#ffffff','#f8b800'];
+  var flash=document.createElement('div');
+  flash.className='px-flash';
+  flash.style.left=e.clientX+'px';
+  flash.style.top=e.clientY+'px';
+  document.body.appendChild(flash);
+  setTimeout(function(){flash.remove();},220);
+  for(var i=0;i<dirs.length;i++){
+    (function(d,c){
+      var sp=document.createElement('div');
+      sp.className='px-spark';
+      sp.style.left=e.clientX+'px';
+      sp.style.top=e.clientY+'px';
+      sp.style.background=c;
+      sp.style.setProperty('--dx',d[0]);
+      sp.style.setProperty('--dy',d[1]);
+      document.body.appendChild(sp);
+      setTimeout(function(){sp.remove();},450);
+    })(dirs[i],colors[i]);
+  }
+});
+</script>
+</body>
+</html>
